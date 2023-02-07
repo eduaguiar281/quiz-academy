@@ -31,18 +31,21 @@ class PerguntaService (
             .findFirst().get()
     }
 
-    fun cadastrar(form: NovaPerguntaForm){
+    fun cadastrar(form: NovaPerguntaForm): Pergunta{
         val novoId = perguntasList.size.toLong() + 1
-        perguntasList.add(Pergunta(novoId, form.pergunta, form.nivelPergunta))
+        val novaPergunta = Pergunta(novoId, form.pergunta, form.nivelPergunta)
+        perguntasList.add(novaPergunta)
+        return novaPergunta
     }
 
-    fun alterar(form: AlteraPerguntaForm){
+    fun alterar(form: AlteraPerguntaForm): Pergunta{
         val pergunta = perguntasList
             .stream()
             .filter({p -> p.id == form.id})
             .findFirst().get()
         pergunta.descricao = form.pergunta
         pergunta.nivel = form.nivelPergunta
+        return pergunta
     }
 
     fun deletar(id: Long){
