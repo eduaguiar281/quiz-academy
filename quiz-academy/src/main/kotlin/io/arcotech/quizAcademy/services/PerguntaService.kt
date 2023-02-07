@@ -1,5 +1,7 @@
 package io.arcotech.quizAcademy.services
 
+import io.arcotech.quizAcademy.dto.AlteraPerguntaForm
+import io.arcotech.quizAcademy.dto.NovaPerguntaForm
 import io.arcotech.quizAcademy.models.NivelPergunta
 import io.arcotech.quizAcademy.models.Pergunta
 import org.springframework.stereotype.Service
@@ -27,5 +29,27 @@ class PerguntaService (
         return perguntasList.stream()
             .filter({p -> p.id == id})
             .findFirst().get()
+    }
+
+    fun cadastrar(form: NovaPerguntaForm){
+        val novoId = perguntasList.size.toLong() + 1
+        perguntasList.add(Pergunta(novoId, form.pergunta, form.nivelPergunta))
+    }
+
+    fun alterar(form: AlteraPerguntaForm){
+        val pergunta = perguntasList
+            .stream()
+            .filter({p -> p.id == form.id})
+            .findFirst().get()
+        pergunta.descricao = form.pergunta
+        pergunta.nivel = form.nivelPergunta
+    }
+
+    fun deletar(id: Long){
+        val pergunta = perguntasList
+            .stream()
+            .filter({p -> p.id == id})
+            .findFirst().get()
+        perguntasList.remove(pergunta)
     }
 }
