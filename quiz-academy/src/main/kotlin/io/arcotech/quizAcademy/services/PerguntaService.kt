@@ -2,8 +2,9 @@ package io.arcotech.quizAcademy.services
 
 import io.arcotech.quizAcademy.models.NivelPergunta
 import io.arcotech.quizAcademy.models.Pergunta
-import kotlin.streams.toList
+import org.springframework.stereotype.Service
 
+@Service
 class PerguntaService (
     var perguntasList: MutableList<Pergunta> = mutableListOf()
 ){
