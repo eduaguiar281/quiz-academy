@@ -2,11 +2,11 @@ package io.arcotech.quizAcademy.models
 
 import java.time.LocalDateTime
 
-class Pergunta (
-    id: Long?,
+data class Pergunta (
+    override val id: Long?,
     var descricao: String,
     val nivel: NivelPergunta,
     val respostas: List<Resposta> = ArrayList(),
-    dataHoraCadastro: LocalDateTime = LocalDateTime.now()
+    override val dataHoraCadastro: LocalDateTime = LocalDateTime.now()
 ):Entidade(id, dataHoraCadastro)  {
 }
