@@ -2,13 +2,15 @@ package io.arcotech.quizAcademy.services
 
 import io.arcotech.quizAcademy.dto.AlteraPerguntaForm
 import io.arcotech.quizAcademy.dto.NovaPerguntaForm
+import io.arcotech.quizAcademy.exceptions.NotFoundException
 import io.arcotech.quizAcademy.models.NivelPergunta
 import io.arcotech.quizAcademy.models.Pergunta
 import org.springframework.stereotype.Service
 
 @Service
 class PerguntaService (
-    var perguntasList: MutableList<Pergunta> = mutableListOf()
+    var perguntasList: MutableList<Pergunta> = mutableListOf(),
+    val notFoundMessage: String = "Pergunta não foi localizada!"
 ){
 
     init{
@@ -28,7 +30,7 @@ class PerguntaService (
     fun obterPorId(id: Long): Pergunta{
         return perguntasList.stream()
             .filter({p -> p.id == id})
-            .findFirst().get()
+            .findFirst().orElseThrow{(NotFoundException(notFoundMessage))}
     }
 
     fun cadastrar(form: NovaPerguntaForm): Pergunta{
@@ -42,7 +44,7 @@ class PerguntaService (
         val pergunta = perguntasList
             .stream()
             .filter({p -> p.id == form.id})
-            .findFirst().get()
+            .findFirst().orElseThrow{(NotFoundException(notFoundMessage))}
         pergunta.descricao = form.pergunta
         pergunta.nivel = form.nivelPergunta
         return pergunta
@@ -52,7 +54,7 @@ class PerguntaService (
         val pergunta = perguntasList
             .stream()
             .filter({p -> p.id == id})
-            .findFirst().get()
+            .findFirst().orElseThrow{(NotFoundException(notFoundMessage))}
         perguntasList.remove(pergunta)
     }
 }
