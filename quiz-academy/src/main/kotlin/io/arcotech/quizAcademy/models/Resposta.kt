@@ -7,4 +7,4 @@ data class Resposta (
     var resposta: String,
     var fonte: String,
     override val dataHoraCadastro: LocalDateTime = LocalDateTime.now()
-):Entidade()
+):Entidade(id, dataHoraCadastro)
