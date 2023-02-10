@@ -8,4 +8,4 @@ data class Pergunta (
     var nivel: NivelPergunta,
     val respostas: List<Resposta> = ArrayList(),
     override val dataHoraCadastro: LocalDateTime = LocalDateTime.now()
-):Entidade()
+):Entidade(id, dataHoraCadastro)
