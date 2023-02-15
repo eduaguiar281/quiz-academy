@@ -1,45 +1,62 @@
 package io.arcotech.quizAcademy.services
 
 import io.arcotech.quizAcademy.dto.AlteraPerguntaForm
+import io.arcotech.quizAcademy.dto.CategoriaPerguntaView
 import io.arcotech.quizAcademy.dto.NovaPerguntaForm
+import io.arcotech.quizAcademy.dto.PerguntaView
 import io.arcotech.quizAcademy.exceptions.NotFoundException
-import io.arcotech.quizAcademy.models.Pergunta
+import io.arcotech.quizAcademy.mappers.NovaPerguntaFormMapper
+import io.arcotech.quizAcademy.mappers.PerguntaViewMapper
+import io.arcotech.quizAcademy.mappers.mapFrom
 import io.arcotech.quizAcademy.repositories.PerguntaRepository
 import org.springframework.stereotype.Service
 
 @Service
 class PerguntaService (
     private val perguntaRepository: PerguntaRepository,
+    private val perguntaViewMapper: PerguntaViewMapper,
+    private val novaPerguntaFormMapper: NovaPerguntaFormMapper,
     private val notFoundMessage: String = "Pergunta não foi localizada!"
 ){
 
-    fun listar(): List<Pergunta> {
-        return perguntaRepository.findAll()
+    fun listar(autor: String?): List<PerguntaView> {
+
+        val results = if (autor == null){
+            perguntaRepository.findAll()
+        }
+        else{
+            perguntaRepository.findByAutor(autor)
+        }
+        return results.map { p -> perguntaViewMapper.map(p) }
     }
 
-    fun obterPorId(id: Long): Pergunta{
-        return perguntaRepository.findById(id)
+    fun obterPorId(id: Long): PerguntaView{
+        val pergunta =  perguntaRepository.findById(id)
             .orElseThrow{(NotFoundException(notFoundMessage))}
+        return perguntaViewMapper.map(pergunta)
     }
 
-    fun cadastrar(form: NovaPerguntaForm): Pergunta{
-        val novaPergunta = Pergunta(descricao = form.pergunta, nivel = form.nivelPergunta)
+    fun cadastrar(form: NovaPerguntaForm): PerguntaView{
+        val novaPergunta = novaPerguntaFormMapper.map(form)
         perguntaRepository.save(novaPergunta)
-        return novaPergunta
+        return perguntaViewMapper.map(novaPergunta)
     }
 
-    fun alterar(form: AlteraPerguntaForm): Pergunta{
+    fun alterar(form: AlteraPerguntaForm): PerguntaView{
         val pergunta = perguntaRepository.findById(form.id)
             .orElseThrow{(NotFoundException(notFoundMessage))}
-        pergunta.descricao = form.pergunta
-        pergunta.nivel = form.nivelPergunta
+        pergunta.mapFrom(form)
         perguntaRepository.save(pergunta)
-        return pergunta
+        return perguntaViewMapper.map(pergunta)
     }
 
     fun deletar(id: Long){
         val pergunta = perguntaRepository.findById(id)
             .orElseThrow{(NotFoundException(notFoundMessage))}
         perguntaRepository.delete(pergunta)
+    }
+
+    fun relatorioCategoria(): List<CategoriaPerguntaView> {
+        return perguntaRepository.relatorioCategorias()
     }
 }

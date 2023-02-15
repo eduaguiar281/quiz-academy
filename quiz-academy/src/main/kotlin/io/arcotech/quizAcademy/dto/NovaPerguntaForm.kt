@@ -10,5 +10,7 @@ data class NovaPerguntaForm (
     @field:Size(min = 10, max = 250, message = "Pergunta deve ter entre 10 e 250 caracteres!")
     val pergunta: String,
     @field:NotNull(message = "Nível da pergunta é obrigatório!")
-    val nivelPergunta: NivelPergunta
+    val nivelPergunta: NivelPergunta,
+    val categoria: String? = null,
+    val autor: String? = null
 )
