@@ -7,6 +7,10 @@ import io.arcotech.quizAcademy.dto.PerguntaView
 import io.arcotech.quizAcademy.services.PerguntaService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,8 +21,11 @@ import org.springframework.web.util.UriComponentsBuilder
 class PerguntasController (val perguntaService: PerguntaService) {
 
     @GetMapping
-    fun listar(@RequestParam(required = false) autor: String?): List<PerguntaView>{
-        return perguntaService.listar(autor)
+    fun listar(
+        @RequestParam(required = false) autor: String?,
+        @PageableDefault(size = 5, sort = ["categoria"], direction = Sort.Direction.ASC) paginacao: Pageable
+    ): Page<PerguntaView> {
+        return perguntaService.listar(autor, paginacao)
     }
     @GetMapping("/{id}")
     fun ObterPorId(@PathVariable id: Long): PerguntaView{
