@@ -9,6 +9,8 @@ import io.arcotech.quizAcademy.mappers.NovaPerguntaFormMapper
 import io.arcotech.quizAcademy.mappers.PerguntaViewMapper
 import io.arcotech.quizAcademy.mappers.mapFrom
 import io.arcotech.quizAcademy.repositories.PerguntaRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,13 +21,13 @@ class PerguntaService (
     private val notFoundMessage: String = "Pergunta não foi localizada!"
 ){
 
-    fun listar(autor: String?): List<PerguntaView> {
+    fun listar(autor: String?, paginacao: Pageable): Page<PerguntaView> {
 
         val results = if (autor == null){
-            perguntaRepository.findAll()
+            perguntaRepository.findAll(paginacao)
         }
         else{
-            perguntaRepository.findByAutor(autor)
+            perguntaRepository.findByAutor(autor, paginacao)
         }
         return results.map { p -> perguntaViewMapper.map(p) }
     }
