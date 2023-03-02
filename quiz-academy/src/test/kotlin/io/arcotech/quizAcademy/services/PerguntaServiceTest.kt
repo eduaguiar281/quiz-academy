@@ -1,7 +1,6 @@
 package io.arcotech.quizAcademy.services
 
 import io.arcotech.quizAcademy.dto.CategoriaPerguntaView
-import io.arcotech.quizAcademy.dto.PerguntaView
 import io.arcotech.quizAcademy.mappers.NovaPerguntaFormMapper
 import io.arcotech.quizAcademy.mappers.PerguntaViewMapper
 import io.arcotech.quizAcademy.models.NivelPergunta
@@ -10,9 +9,13 @@ import io.arcotech.quizAcademy.repositories.PerguntaRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.mockito.Mockito
 import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 
 class PerguntaServiceTest {
 
@@ -47,21 +50,31 @@ class PerguntaServiceTest {
         perguntaService = PerguntaService(perguntaRepository, perguntaViewMapper, novaPerguntaFormMapper)
     }
 
-    @Test
-    fun `listar deve retornar lista de perguntas paginadas`(){
+    @ParameterizedTest
+    @CsvSource(
+        "null",
+        "Eduardo"
+    )
+    fun `listar deve retornar lista de perguntas paginadas`(
+        autor: String
+    ){
         // given
-        val paginacao = Mockito.mock(Pageable::class.java)
-        val page = PageImpl(listaPerguntas)
-        Mockito.`when`(perguntaRepository.findAll(paginacao)).thenReturn(page)
+        val paginacao =  Mockito.mock(Pageable::class.java)
+        var nomeAutor : String? = null;
+        if (autor == "null") {
+            Mockito.`when`(perguntaRepository.findAll(paginacao)).thenReturn(PageImpl(listaPerguntas))
 
+        } else {
+            nomeAutor = autor
+            Mockito.`when`(perguntaRepository.findByAutor(nomeAutor, paginacao)).thenReturn(PageImpl(listaPerguntas))
+        }
         // when
-        val resultados = perguntaService.listar(null, paginacao)
+        val resultados = perguntaService.listar(nomeAutor, paginacao)
 
         // then
         assertEquals(2, resultados.content.size)
         assertEquals("Quem descobriu o Brasil?", resultados.content[0].pergunta)
         assertEquals("Quanto é 2 x 2?", resultados.content[1].pergunta)
-
     }
 
     @Test
