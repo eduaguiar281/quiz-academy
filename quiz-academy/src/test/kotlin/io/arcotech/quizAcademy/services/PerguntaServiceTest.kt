@@ -9,13 +9,10 @@ import io.arcotech.quizAcademy.repositories.PerguntaRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
-import org.springframework.data.domain.Sort
 
 class PerguntaServiceTest {
 
@@ -50,31 +47,38 @@ class PerguntaServiceTest {
         perguntaService = PerguntaService(perguntaRepository, perguntaViewMapper, novaPerguntaFormMapper)
     }
 
-    @ParameterizedTest
-    @CsvSource(
-        "null",
-        "Eduardo"
-    )
-    fun `listar deve retornar lista de perguntas paginadas`(
-        autor: String
+    @Test
+    fun `listar sem autor deve retornar lista de perguntas paginadas`(
     ){
         // given
         val paginacao =  Mockito.mock(Pageable::class.java)
-        var nomeAutor : String? = null;
-        if (autor == "null") {
-            Mockito.`when`(perguntaRepository.findAll(paginacao)).thenReturn(PageImpl(listaPerguntas))
+        Mockito.`when`(perguntaRepository.findAll(paginacao)).thenReturn(PageImpl(listaPerguntas))
 
-        } else {
-            nomeAutor = autor
-            Mockito.`when`(perguntaRepository.findByAutor(nomeAutor, paginacao)).thenReturn(PageImpl(listaPerguntas))
-        }
         // when
-        val resultados = perguntaService.listar(nomeAutor, paginacao)
+        val resultados = perguntaService.listar(null, paginacao)
 
         // then
         assertEquals(2, resultados.content.size)
-        assertEquals("Quem descobriu o Brasil?", resultados.content[0].pergunta)
-        assertEquals("Quanto é 2 x 2?", resultados.content[1].pergunta)
+        assertEquals(perguntaViewMapper.map(listaPerguntas[0]), resultados.content[0])
+        assertEquals(perguntaViewMapper.map(listaPerguntas[1]), resultados.content[1])
+        Mockito.verify(perguntaRepository, Mockito.times(1)).findAll(paginacao)
+    }
+
+    @Test
+    fun `listar com autor deve retornar lista de perguntas paginadas`(
+    ){
+        // given
+        val paginacao =  Mockito.mock(Pageable::class.java)
+        Mockito.`when`(perguntaRepository.findByAutor("Eduardo", paginacao)).thenReturn(PageImpl(listaPerguntas))
+
+        // when
+        val resultados = perguntaService.listar("Eduardo", paginacao)
+
+        // then
+        assertEquals(2, resultados.content.size)
+        assertEquals(perguntaViewMapper.map(listaPerguntas[0]), resultados.content[0])
+        assertEquals(perguntaViewMapper.map(listaPerguntas[1]), resultados.content[1])
+        Mockito.verify(perguntaRepository, Mockito.times(1)).findByAutor("Eduardo", paginacao)
     }
 
     @Test
@@ -94,6 +98,4 @@ class PerguntaServiceTest {
         Mockito.verify(perguntaRepository, Mockito.times(1)).relatorioCategorias()
 
     }
-
-
 }

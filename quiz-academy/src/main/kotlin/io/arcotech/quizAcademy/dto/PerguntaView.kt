@@ -3,7 +3,7 @@ package io.arcotech.quizAcademy.dto
 import io.arcotech.quizAcademy.models.NivelPergunta
 import java.time.LocalDateTime
 
-class PerguntaView (
+data class PerguntaView (
        val id: Long?,
        val pergunta: String,
        val nivelPergunta: NivelPergunta,
