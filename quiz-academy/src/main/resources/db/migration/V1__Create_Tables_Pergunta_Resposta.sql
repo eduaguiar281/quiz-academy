@@ -15,7 +15,6 @@ create table resposta(
       pergunta_id bigint not null,
       foreign key (pergunta_id) references pergunta(id)
 );
-
 -- SCRIPT H2
 --create table pergunta(
 --      id bigint not null auto_increment,
