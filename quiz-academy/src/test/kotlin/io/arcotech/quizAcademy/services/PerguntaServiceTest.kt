@@ -3,6 +3,7 @@ package io.arcotech.quizAcademy.services
 import io.arcotech.quizAcademy.dto.CategoriaPerguntaView
 import io.arcotech.quizAcademy.mappers.NovaPerguntaFormMapper
 import io.arcotech.quizAcademy.mappers.PerguntaViewMapper
+import io.arcotech.quizAcademy.messages.RabbitMQProducer
 import io.arcotech.quizAcademy.models.NivelPergunta
 import io.arcotech.quizAcademy.models.Pergunta
 import io.arcotech.quizAcademy.repositories.PerguntaRepository
@@ -13,6 +14,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
+import java.util.ResourceBundle
 
 class PerguntaServiceTest {
 
@@ -23,6 +25,8 @@ class PerguntaServiceTest {
     private lateinit var perguntaViewMapper: PerguntaViewMapper
 
     private lateinit var perguntaService: PerguntaService
+
+    private lateinit var rabbitMQProducer: RabbitMQProducer
 
     private val listaPerguntas = listOf(
         Pergunta(
@@ -42,9 +46,11 @@ class PerguntaServiceTest {
     @BeforeEach
     fun setUp() {
         perguntaRepository = Mockito.mock(PerguntaRepository::class.java)
+        rabbitMQProducer = Mockito.mock(RabbitMQProducer::class.java)
         perguntaViewMapper= PerguntaViewMapper()
         novaPerguntaFormMapper= NovaPerguntaFormMapper()
-        perguntaService = PerguntaService(perguntaRepository, perguntaViewMapper, novaPerguntaFormMapper)
+
+        perguntaService = PerguntaService(perguntaRepository, perguntaViewMapper, novaPerguntaFormMapper, rabbitMQProducer)
     }
 
     @Test

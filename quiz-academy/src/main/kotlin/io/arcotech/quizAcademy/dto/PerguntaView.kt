@@ -10,4 +10,6 @@ data class PerguntaView (
        val categoria: String? = null,
        val autor: String? = null,
        val dataHoraCadastro: LocalDateTime = LocalDateTime.now()
-)
+){
+       constructor() : this (null, "", NivelPergunta.BASICO)
+}

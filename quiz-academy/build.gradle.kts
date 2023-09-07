@@ -27,6 +27,7 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-amqp")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -34,10 +35,14 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("com.h2database:h2")
 	implementation("org.flywaydb:flyway-core")
-	implementation("org.postgresql:postgresql:42.5.3")
+	implementation("org.postgresql:postgresql:42.5.4")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.testcontainers:testcontainers:1.18.3")
+	testImplementation("org.testcontainers:postgresql:1.18.3")
+	testImplementation("org.testcontainers:rabbitmq:1.18.3")
+	testImplementation("org.testcontainers:junit-jupiter:1.18.3")
 }
 
 tasks.withType<KotlinCompile> {

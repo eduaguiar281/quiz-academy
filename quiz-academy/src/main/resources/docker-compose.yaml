@@ -12,7 +12,13 @@ services:
       - 5432:5432
     expose:
       - 5432
+  rabbitmq:
+    container_name: quizRabbit
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    image: 'rabbitmq:3-management'
 
 networks:
   default:
-    name: postgre-service_default
+     name: postgre-service_default
