@@ -10,7 +10,11 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 # Configuração com H2
 #spring:
 #  datasource:

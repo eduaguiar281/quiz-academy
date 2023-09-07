@@ -10,6 +10,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/quiz-academy" />
+            <option value="$PROJECT_DIR$/quiz-academy/infrastructure" />
             <option value="$PROJECT_DIR$/quiz-academy/quiz-academy-client" />
           </set>
         </option>

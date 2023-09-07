@@ -2,10 +2,12 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="quiz-academy.infrastructure.main" target="18" />
+      <module name="quiz-academy.infrastructure.test" target="18" />
       <module name="quiz-academy.quiz-academy-client.main" target="18" />
       <module name="quiz-academy.quiz-academy-client.test" target="18" />
-      <module name="quiz-academy.quiz-academy.main" target="17" />
-      <module name="quiz-academy.quiz-academy.test" target="17" />
+      <module name="quiz-academy.quiz-academy.main~1" target="17" />
+      <module name="quiz-academy.quiz-academy.test~1" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

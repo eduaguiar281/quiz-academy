@@ -8,6 +8,7 @@ import io.arcotech.quizAcademy.exceptions.NotFoundException
 import io.arcotech.quizAcademy.mappers.NovaPerguntaFormMapper
 import io.arcotech.quizAcademy.mappers.PerguntaViewMapper
 import io.arcotech.quizAcademy.mappers.mapFrom
+import io.arcotech.quizAcademy.messages.RabbitMQProducer
 import io.arcotech.quizAcademy.repositories.PerguntaRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -18,6 +19,7 @@ class PerguntaService (
     private val perguntaRepository: PerguntaRepository,
     private val perguntaViewMapper: PerguntaViewMapper,
     private val novaPerguntaFormMapper: NovaPerguntaFormMapper,
+    private val rabbitMQProducer: RabbitMQProducer,
     private val notFoundMessage: String = "Pergunta não foi localizada!"
 ){
 
@@ -41,6 +43,7 @@ class PerguntaService (
     fun cadastrar(form: NovaPerguntaForm): PerguntaView{
         val novaPergunta = novaPerguntaFormMapper.map(form)
         perguntaRepository.save(novaPergunta)
+        rabbitMQProducer.sendMessage("quiz-pergunta-cadastrada", novaPergunta)
         return perguntaViewMapper.map(novaPergunta)
     }
 
@@ -49,12 +52,14 @@ class PerguntaService (
             .orElseThrow{(NotFoundException(notFoundMessage))}
         pergunta.mapFrom(form)
         perguntaRepository.save(pergunta)
+        rabbitMQProducer.sendMessage("quiz-pergunta-alterada", pergunta)
         return perguntaViewMapper.map(pergunta)
     }
 
     fun deletar(id: Long){
         val pergunta = perguntaRepository.findById(id)
             .orElseThrow{(NotFoundException(notFoundMessage))}
+        rabbitMQProducer.sendMessage("quiz-pergunta-excluida", pergunta)
         perguntaRepository.delete(pergunta)
     }
 
