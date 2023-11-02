@@ -15,6 +15,11 @@ spring:
     port: 5672
     username: guest
     password: guest
+feature-toggles:
+  configuration:
+    application: xx6u2u3
+    enviroment: gucjoiu
+    profile: vt2myv6
 # Configuração com H2
 #spring:
 #  datasource:

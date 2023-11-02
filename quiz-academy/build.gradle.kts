@@ -37,6 +37,9 @@ dependencies {
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.postgresql:postgresql:42.5.4")
 
+	implementation("software.amazon.awssdk:appconfigdata:2.20.124")
+	implementation("com.github.ben-manes.caffeine:caffeine:3.1.5")
+
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.testcontainers:testcontainers:1.18.3")
