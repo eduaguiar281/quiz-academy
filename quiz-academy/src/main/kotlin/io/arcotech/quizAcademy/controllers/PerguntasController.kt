@@ -4,6 +4,7 @@ import io.arcotech.quizAcademy.dto.AlteraPerguntaForm
 import io.arcotech.quizAcademy.dto.CategoriaPerguntaView
 import io.arcotech.quizAcademy.dto.NovaPerguntaForm
 import io.arcotech.quizAcademy.dto.PerguntaView
+import io.arcotech.quizAcademy.services.featuretoggles.FeatureToggleManagerService
 import io.arcotech.quizAcademy.services.PerguntaService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
@@ -18,7 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 @RequestMapping("/perguntas")
-class PerguntasController (val perguntaService: PerguntaService) {
+class PerguntasController (val perguntaService: PerguntaService, val featureToggleManager: FeatureToggleManagerService) {
 
     @GetMapping
     fun listar(
@@ -33,8 +34,8 @@ class PerguntasController (val perguntaService: PerguntaService) {
     }
 
     @GetMapping("/relatorio-categoria")
-    fun relatorio(): List<CategoriaPerguntaView>{
-        return perguntaService.relatorioCategoria()
+    fun relatorio(@RequestHeader("x-user-id") userId: Int): List<CategoriaPerguntaView>{
+        return perguntaService.relatorioCategoria(userId)
     }
 
     @PostMapping

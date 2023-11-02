@@ -10,6 +10,8 @@ import io.arcotech.quizAcademy.mappers.PerguntaViewMapper
 import io.arcotech.quizAcademy.mappers.mapFrom
 import io.arcotech.quizAcademy.messages.RabbitMQProducer
 import io.arcotech.quizAcademy.repositories.PerguntaRepository
+import io.arcotech.quizAcademy.services.featuretoggles.FeatureToggleManagerService
+import io.arcotech.quizAcademy.services.featuretoggles.userfilter.UserFeatureFilter
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -20,7 +22,8 @@ class PerguntaService (
     private val perguntaViewMapper: PerguntaViewMapper,
     private val novaPerguntaFormMapper: NovaPerguntaFormMapper,
     private val rabbitMQProducer: RabbitMQProducer,
-    private val notFoundMessage: String = "Pergunta não foi localizada!"
+    private val notFoundMessage: String = "Pergunta não foi localizada!",
+    private val featureToggleManagerService: FeatureToggleManagerService
 ){
 
     fun listar(autor: String?, paginacao: Pageable): Page<PerguntaView> {
@@ -63,7 +66,9 @@ class PerguntaService (
         perguntaRepository.delete(pergunta)
     }
 
-    fun relatorioCategoria(): List<CategoriaPerguntaView> {
+    fun relatorioCategoria(userId: Int): List<CategoriaPerguntaView> {
+        if (!featureToggleManagerService.isEnabled(UserFeatureFilter("relatorio-categoria", userId)))
+            throw NotFoundException("Relatório não disponível")
         return perguntaRepository.relatorioCategorias()
     }
 }
