@@ -1,7 +1,7 @@
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url:  jdbc:postgresql://localhost:5432/quizapp_git
+    url:  jdbc:postgresql://localhost:5432/quizapp
     username: postgres
     password: example
   jpa:

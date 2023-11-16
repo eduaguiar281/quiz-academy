@@ -6,6 +6,7 @@ import io.arcotech.quizAcademy.dto.NovaPerguntaForm
 import io.arcotech.quizAcademy.dto.PerguntaView
 import io.arcotech.quizAcademy.services.featuretoggles.FeatureToggleManagerService
 import io.arcotech.quizAcademy.services.PerguntaService
+import io.arcotech.quizAcademy.services.featuretoggles.timewindowfilter.TimeWindowFeatureFilter
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
@@ -34,8 +35,10 @@ class PerguntasController (val perguntaService: PerguntaService, val featureTogg
     }
 
     @GetMapping("/relatorio-categoria")
-    fun relatorio(@RequestHeader("x-user-id") userId: Int): List<CategoriaPerguntaView>{
-        return perguntaService.relatorioCategoria(userId)
+    fun relatorio(@RequestHeader("x-user-id") userId: Int): ResponseEntity<List<CategoriaPerguntaView>>{
+        if (!featureToggleManager.isEnabled(TimeWindowFeatureFilter("timewindow")))
+            return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(perguntaService.relatorioCategoria(userId))
     }
 
     @PostMapping
